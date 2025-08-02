@@ -911,6 +911,22 @@ p {
   padding: 3rem 0 1rem;
 }
 
+.footer-logo {
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.footer-logo-img {
+  height: 60px;
+  width: auto;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.footer-logo-img:hover {
+  opacity: 1;
+}
+
 .footer-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1224,6 +1240,10 @@ p {
   }
   .hero-shape1 { width: 120px; }
   .hero-cube { width: 120px; }
+  
+  .footer-logo-img {
+    height: 50px;
+  }
 }
 
 /* Small mobile */
@@ -1270,6 +1290,10 @@ p {
   }
   .card-logo-img {
       max-width: 80px;
+  }
+  
+  .footer-logo-img {
+    height: 45px;
   }
   .header {
       border-radius: 0 0 12px 12px;
@@ -3140,8 +3164,9 @@ transform: translateX(3px);
 .program-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.3s ease;
+  background-color: #f8f9fa;
 }
 
 .program-item:hover .program-img {
@@ -3166,14 +3191,86 @@ transform: translateX(3px);
   margin: 0;
 }
 
+@media (max-width: 1200px) {
+  .program-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  .program-image {
+    height: 220px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .program-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .program-image {
+    height: 200px;
+  }
+}
+
 @media (max-width: 768px) {
   .program-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+    padding: 0 1rem;
   }
   
   .program-item-featured {
     order: -1;
+  }
+  
+  .program-image {
+    height: 240px;
+  }
+  
+  .program-content {
+    padding: 1.25rem;
+  }
+  
+  .program-title {
+    font-size: 1.1rem;
+  }
+  
+  .program-desc {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .program-section {
+    padding: 2rem 0;
+  }
+  
+  .program-section-title {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .program-grid {
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+  
+  .program-image {
+    height: 220px;
+  }
+  
+  .program-content {
+    padding: 1rem;
+  }
+  
+  .program-title {
+    font-size: 1rem;
+  }
+  
+  .program-desc {
+    font-size: 0.85rem;
   }
 }
 /* TESTIMONIAL SECTION */
