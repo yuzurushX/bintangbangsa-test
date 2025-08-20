@@ -15,6 +15,11 @@ class BintangBangsaWebsite {
         this.setupFormHandling();
         this.setupLazyLoading();
         this.setupAccessibility();
+        this.setupServicesCarousel();
+        this.setupServiceAccordion();
+        this.setupGallerySlideshow();
+        this.setupFAQAccordion();
+        this.setupAlumniAnimation();
     }
 
     setupEventListeners() {
@@ -307,19 +312,6 @@ class BintangBangsaWebsite {
     }
 
     setupAccessibility() {
-        // Skip to content link
-        const skipLink = document.createElement('a');
-        skipLink.href = '#main-content';
-        skipLink.className = 'skip-link';
-        skipLink.textContent = 'Skip to main content';
-        document.body.insertBefore(skipLink, document.body.firstChild);
-        
-        // Add main content landmark
-        const mainContent = document.querySelector('.hero');
-        if (mainContent) {
-            mainContent.id = 'main-content';
-        }
-        
         // Keyboard navigation for dropdown menus
         const dropdowns = document.querySelectorAll('.dropdown');
         dropdowns.forEach(dropdown => {
@@ -338,6 +330,211 @@ class BintangBangsaWebsite {
         
         // Announce dynamic content changes to screen readers
         this.setupLiveRegion();
+    }
+
+    setupServicesCarousel() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dotsContainer = document.querySelector('.carousel-dots');
+        const prevBtn = document.querySelector('.carousel-prev-btn');
+        const nextBtn = document.querySelector('.carousel-next-btn');
+        
+        if (!slides.length || !dotsContainer) return;
+        
+        let currentSlide = 0;
+
+        // Get number of slides to show based on screen size
+        const getSlidesToShow = () => {
+            if (window.innerWidth <= 768) return 1;
+            if (window.innerWidth <= 1024) return 2;
+            return 3;
+        };
+
+        // Calculate number of dots needed
+        const calculateDots = () => {
+            const slidesToShow = getSlidesToShow();
+            const totalSlides = slides.length;
+            const dotsNeeded = Math.ceil(totalSlides / slidesToShow);
+            
+            // Clear existing dots
+            dotsContainer.innerHTML = '';
+            
+            // Create new dots
+            for (let i = 0; i < dotsNeeded; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'carousel-dot';
+                dot.setAttribute('data-slide', i * slidesToShow);
+                dot.addEventListener('click', () => {
+                    currentSlide = i * slidesToShow;
+                    showSlideSet(currentSlide);
+                });
+                dotsContainer.appendChild(dot);
+            }
+            
+            return dotsContainer.querySelectorAll('.carousel-dot');
+        };
+
+        const showSlideSet = (startIndex) => {
+            const slidesToShow = getSlidesToShow();
+            const dots = calculateDots(); // Recalculate dots for current screen size
+            console.log('Showing slides starting from:', startIndex, 'Slides to show:', slidesToShow);
+            
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+                slide.style.display = 'none';
+            });
+            
+            // Remove active class from all dots
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Show current set of slides
+            for (let i = 0; i < slidesToShow; i++) {
+                const slideIndex = (startIndex + i) % slides.length;
+                if (slides[slideIndex]) {
+                    slides[slideIndex].classList.add('active');
+                    slides[slideIndex].style.display = 'flex';
+                    console.log('Activated slide:', slideIndex, 'Display:', slides[slideIndex].style.display);
+                }
+            }
+            
+            // Activate current dot
+            const dotIndex = Math.floor(startIndex / slidesToShow);
+            if (dots[dotIndex]) {
+                dots[dotIndex].classList.add('active');
+            }
+        };
+
+        const nextSlideSet = () => {
+            const slidesToShow = getSlidesToShow();
+            currentSlide = (currentSlide + slidesToShow) % slides.length;
+            if (currentSlide >= slides.length - slidesToShow + 1) {
+                currentSlide = 0; // Loop back to beginning
+            }
+            showSlideSet(currentSlide);
+        };
+
+        const prevSlideSet = () => {
+            const slidesToShow = getSlidesToShow();
+            currentSlide = (currentSlide - slidesToShow + slides.length) % slides.length;
+            if (currentSlide < 0) {
+                currentSlide = Math.max(0, slides.length - slidesToShow);
+            }
+            showSlideSet(currentSlide);
+        };
+
+        // Event listeners
+        if (prevBtn) prevBtn.addEventListener('click', prevSlideSet);
+        if (nextBtn) nextBtn.addEventListener('click', nextSlideSet);
+        
+        // Handle window resize
+        window.addEventListener('resize', this.debounce(() => {
+            const dots = calculateDots(); // Recalculate dots for current screen size
+            showSlideSet(currentSlide);
+        }, 250));
+
+        // Auto-advance carousel every 5 seconds
+        const autoAdvance = setInterval(nextSlideSet, 5000);
+
+        // Pause auto-advance on hover
+        const carouselSection = document.querySelector('.services-carousel-section');
+        if (carouselSection) {
+            carouselSection.addEventListener('mouseenter', () => clearInterval(autoAdvance));
+            carouselSection.addEventListener('mouseleave', () => setInterval(nextSlideSet, 5000));
+        }
+
+        // Initialize first set of slides
+        const dots = calculateDots();
+        showSlideSet(0);
+    }
+
+    setupServiceAccordion() {
+        // Service accordion functionality
+        const serviceHeaders = document.querySelectorAll('.service-header');
+        
+        serviceHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const serviceItem = header.closest('.service-item');
+                const isActive = serviceItem.classList.contains('active');
+
+                // Close all other service items
+                document.querySelectorAll('.service-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Toggle current service item
+                if (!isActive) {
+                    serviceItem.classList.add('active');
+                }
+            });
+        });
+    }
+
+    setupGallerySlideshow() {
+        // Auto Gallery Slideshow Function
+        const slideshows = document.querySelectorAll('.gallery-slideshow');
+        
+        if (!slideshows.length) return;
+        
+        slideshows.forEach(slideshow => {
+            const autoChangeSlide = () => {
+                const slides = slideshow.querySelectorAll('.gallery-slide');
+                const currentSlide = slideshow.querySelector('.gallery-slide.active');
+                
+                if (!currentSlide) return;
+                
+                let currentIndex = Array.from(slides).indexOf(currentSlide);
+                
+                // Remove active class from current slide
+                currentSlide.classList.remove('active');
+                
+                // Move to next slide
+                currentIndex = (currentIndex + 1) % slides.length;
+                
+                // Add active class to new slide
+                slides[currentIndex].classList.add('active');
+            };
+
+            // Auto change slides every 5 seconds
+            setInterval(autoChangeSlide, 5000);
+        });
+    }
+
+    setupFAQAccordion() {
+        // FAQ Accordion Function
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.closest('.faq-item');
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all other FAQ items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Toggle current FAQ item
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+    }
+
+    setupAlumniAnimation() {
+        // Ensure alumni animation starts properly
+        const alumniTrack = document.querySelector('.alumni-running-track');
+        if (alumniTrack) {
+            // Force reflow to ensure animation starts
+            alumniTrack.style.animation = 'none';
+            alumniTrack.offsetHeight; // Trigger reflow
+            
+            // Set animation with all browser prefixes
+            alumniTrack.style.webkitAnimation = 'alumniScroll 30s linear infinite';
+            alumniTrack.style.mozAnimation = 'alumniScroll 30s linear infinite';
+            alumniTrack.style.oAnimation = 'alumniScroll 30s linear infinite';
+            alumniTrack.style.animation = 'alumniScroll 30s linear infinite';
+        }
     }
 
     setupLiveRegion() {
