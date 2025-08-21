@@ -3151,9 +3151,81 @@ textarea:focus {
   transition: all 0.3s ease;
 }
 
+/* Mobile optimization for metric items */
+@media (max-width: 768px) {
+  .metric-item {
+    padding: 1rem 0.75rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+  
+  .metric-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .metric-number {
+    font-size: 1.75rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .metric-label {
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 480px) {
+  .metric-item {
+    padding: 0.75rem 0.5rem;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+    min-height: auto;
+  }
+  
+  .metric-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .metric-number {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .metric-label {
+    font-size: 0.75rem;
+    line-height: 1.1;
+    padding: 0 0.25rem;
+  }
+  
+  /* Ensure proper spacing on very small screens */
+  .hero-tni-metrics {
+    gap: 0.5rem;
+    margin: 0 0.25rem;
+  }
+}
+
 .metric-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile-friendly hover effects */
+@media (max-width: 768px) {
+  .metric-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .metric-item:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .metric-icon {
@@ -3199,7 +3271,7 @@ textarea:focus {
   }
   
   .hero-tni-metrics {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
   }
 }
@@ -3245,12 +3317,17 @@ textarea:focus {
   }
   
   .hero-tni-metrics {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
   }
   
   .metric-item {
     padding: 1rem;
+  }
+  
+  /* Additional mobile optimization for metrics grid */
+  .hero-tni-metrics {
+    gap: 0.75rem;
   }
   
   .metric-number {
@@ -3290,7 +3367,9 @@ textarea:focus {
 
   
   .hero-tni-metrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin: 0 0.5rem;
   }
   
   .alumni-profiles {
